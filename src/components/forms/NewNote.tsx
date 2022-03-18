@@ -46,8 +46,6 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
     }
   };
 
-  const;
-
   return (
     <>
       <SlideMenu opened={opened} close={close} title="New note" width="20rem">
