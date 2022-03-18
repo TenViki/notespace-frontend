@@ -9,10 +9,12 @@ import { Note } from "./types";
 function App() {
   const [newNoteOpened, setNewNoteOpened] = useState(false);
   const [taglistOpened, setTaglistOpened] = useState(false);
+  const [noteDataOpened, setNoteDataOpened] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [formDate, setFormDate] = useState<Date>(new Date());
+  const [selectedNote, setSelectedNote] = useState<string | null>(null);
 
   return (
     <div className="app">
@@ -52,6 +54,11 @@ function App() {
         }}
         date={selectedDate}
         notes={notes.filter((note) => note.forDay.split("-")[2] === selectedDate.getDate() + "")}
+        selectNote={(id) => {
+          setNoteDataOpened(true);
+          setSelectedNote(id);
+        }}
+        selectedNote={selectedNote}
       />
 
       <NewNote
