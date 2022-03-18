@@ -86,3 +86,24 @@ input {
     background-color: #f0f0f0;
   }
 }
+
+textarea {
+  background-color: #f4f4f4;
+  border: 1px solid #c9c9c9;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-radius: 0.3rem;
+  padding: 0.6rem 0.5rem;
+  outline: 0;
+  resize: vertical;
+  font-family: "Nunito";
+  font-size: 0.9rem;
+
+  transition: 0.2s border, 0.2s background-color;
+
+  &:focus {
+    border-color: $color;
+    background-color: #f0f0f0;
+  }
+}

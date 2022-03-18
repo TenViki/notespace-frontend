@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import "react-day-picker/lib/style.css";
+import { useMutation } from "react-query";
 
 interface NewNoteProps {
   opened: boolean;
@@ -28,7 +29,29 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
 
   const [label, setLabel] = React.useState("");
   const [tag, setTag] = React.useState("");
+  const [content, setContent] = React.useState("");
   const [date, setDate] = React.useState(new Date());
+
+  const createNote = useMutation(
+    async (data: {
+      tag: string;
+      label: string;
+      content: string;
+      files: string[];
+      forDay: Date;
+    }) => {
+      return api.post("/notes", { ...data, forDay: data.forDay.toISOString() });
+    },
+    {
+      onSuccess: () => {
+        toast.success("Note created");
+        close();
+      },
+      onError: () => {
+        toast.error("Error creating note");
+      },
+    }
+  );
 
   document.ondragenter = (e) => {
     e.preventDefault();
@@ -120,6 +143,11 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
           value={label}
           onChange={(e) => setLabel(e.target.value)}
         />
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Note content"
+        ></textarea>
         <DayPickerInput onDayChange={setDate} value={date} />
 
         <div className="add-note-files">
@@ -140,7 +168,17 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
             })}
         </div>
 
-        <button>
+        <button
+          onClick={() =>
+            createNote.mutate({
+              content: content,
+              files: fileIds,
+              label: label,
+              tag: tag,
+              forDay: date,
+            })
+          }
+        >
           <div className="text">Create</div>
         </button>
       </SlideMenu>
