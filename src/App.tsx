@@ -36,7 +36,8 @@ function App() {
           className="add-new"
           onClick={() => {
             setNewNoteOpened(!newNoteOpened);
-            setTaglistOpened(newNoteOpened);
+            setTaglistOpened(false);
+            setSelectedDate(new Date());
           }}
         >
           <FiPlus />
