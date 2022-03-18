@@ -1,0 +1,60 @@
+@import "../../config/styles.scss";
+
+.overlay {
+  max-width: 0;
+  margin-left: 0;
+  transition: 0.35s;
+
+  .menu {
+    width: var(--width);
+    opacity: 0;
+    transition: 0.35s;
+    transform: translateX(1rem);
+  }
+
+  &.active {
+    max-width: var(--width);
+    margin-left: 1rem;
+
+    .menu {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .menu-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .menu-title {
+      font-size: 1.3rem;
+      flex-grow: 1;
+    }
+
+    .menu-x {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $danger;
+      cursor: pointer;
+      transition: 0.2s;
+
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      &:hover {
+        background-color: rgba($danger, 0.1);
+      }
+
+      &:active {
+        background-color: rgba($danger, 0.2);
+      }
+    }
+  }
+}

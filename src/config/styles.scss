@@ -1,4 +1,5 @@
 $color: #3498db;
+$danger: #e74c3c;
 
 body {
   background-color: #dbdbdb;
@@ -12,6 +13,7 @@ body {
 .app {
   margin: 0 auto;
   width: fit-content;
+  display: flex;
 }
 
 .main {
