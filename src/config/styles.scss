@@ -6,9 +6,18 @@ body {
 }
 
 .container {
-  max-width: 30rem;
   margin: 0 auto;
 }
+
+.app {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.main {
+  max-width: 30rem;
+}
+
 button {
   border: none;
   background-color: $color;
@@ -17,7 +26,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   padding: 0.3rem;
 
   svg {
@@ -33,4 +42,14 @@ button {
   &:active {
     background-color: darken($color, 10%);
   }
+
+  .text {
+    margin: 0.3rem;
+    font-family: "Nunito";
+  }
+}
+
+.add-new {
+  margin-top: 0.5rem;
+  width: 100%;
 }
