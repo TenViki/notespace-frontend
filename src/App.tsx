@@ -21,7 +21,11 @@ function App() {
           <div className="text">Add note</div>
         </button>
       </div>
-      <NewNote opened={newNoteOpened} close={() => setNewNoteOpened(false)} />
+      <NewNote
+        opened={newNoteOpened}
+        close={() => setNewNoteOpened(false)}
+        open={() => setNewNoteOpened(true)}
+      />
     </div>
   );
 }

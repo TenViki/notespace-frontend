@@ -94,8 +94,8 @@ const Calendar = () => {
         <div className="day label">Sat</div>
         <div className="day label">Sun</div>
 
-        {days.map((day) => (
-          <DateItem date={day.date} inMonth={day.inMonth} />
+        {days.map((day, i) => (
+          <DateItem date={day.date} inMonth={day.inMonth} key={i} />
         ))}
       </div>
     </div>
