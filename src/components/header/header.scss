@@ -1,0 +1,9 @@
+nav {
+  display: flex;
+  align-items: center;
+
+  .nav-logo {
+    font-size: 2rem;
+    flex-grow: 1;
+  }
+}
