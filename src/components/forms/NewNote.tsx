@@ -7,6 +7,8 @@ import Document from "./Document";
 import { FileType } from "../../types";
 import { toast } from "react-toastify";
 import axios from "axios";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import "react-day-picker/lib/style.css";
 
 interface NewNoteProps {
   opened: boolean;
@@ -23,6 +25,10 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [uploadQueue, setUploadQueue] = React.useState<File[]>([]);
   const [uploading, setUploading] = React.useState(false);
   const [fileIds, setFileIds] = React.useState<string[]>([]);
+
+  const [label, setLabel] = React.useState("");
+  const [tag, setTag] = React.useState("");
+  const [date, setDate] = React.useState(new Date());
 
   document.ondragenter = (e) => {
     e.preventDefault();
@@ -102,9 +108,19 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   return (
     <>
       <SlideMenu opened={opened} close={close} title="New note" width="20rem">
-        <input type="text" placeholder="Tag" />
-        <input type="text" placeholder="Label" />
-        <input type="date" placeholder="For date" />
+        <input
+          type="text"
+          placeholder="Tag"
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Label"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+        />
+        <DayPickerInput onDayChange={setDate} value={date} />
 
         <div className="add-note-files">
           <div className="file-title">Attachements:</div>
