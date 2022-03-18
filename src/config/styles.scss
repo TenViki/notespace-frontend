@@ -24,4 +24,13 @@ button {
     width: 1.5rem;
     height: 1.5rem;
   }
+
+  transition: 0.2s;
+  &:hover {
+    background-color: darken($color, 5%);
+  }
+
+  &:active {
+    background-color: darken($color, 10%);
+  }
 }
