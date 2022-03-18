@@ -3,6 +3,7 @@ import { FiPlus } from "react-icons/fi";
 import Calendar from "./components/calendar/Calendar";
 import NewNote from "./components/forms/NewNote";
 import Header from "./components/header/Header";
+import NoteData from "./components/notes/NoteData";
 import TagList from "./components/notes/TagList";
 import { Note } from "./types";
 
@@ -30,6 +31,8 @@ function App() {
               : (date) => {
                   setSelectedDate(date);
                   setTaglistOpened(true);
+                  setNoteDataOpened(false);
+                  setSelectedNote(null);
                 }
           }
         />
@@ -39,6 +42,8 @@ function App() {
           onClick={() => {
             setNewNoteOpened(!newNoteOpened);
             setTaglistOpened(false);
+            setNoteDataOpened(false);
+            setSelectedNote(null);
             setSelectedDate(new Date());
           }}
         >
@@ -60,6 +65,8 @@ function App() {
         }}
         selectedNote={selectedNote}
       />
+
+      <NoteData opened={noteDataOpened} close={() => setNoteDataOpened(false)} stringid={selectedNote || ""} />
 
       <NewNote
         opened={newNoteOpened}

@@ -9,7 +9,7 @@ interface NoteDataProps {
 
 const NoteData: React.FC<NoteDataProps> = ({ opened, close, stringid }) => {
   return (
-    <SlideMenu opened={opened} close={close} title="Loading">
+    <SlideMenu opened={opened} close={close} title="Loading" width="30rem">
       NoteData
     </SlideMenu>
   );
