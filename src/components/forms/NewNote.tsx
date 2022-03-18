@@ -10,9 +10,11 @@ interface NewNoteProps {
   open: () => void;
 }
 
-const NewNote: React.FC<NewNoteProps> = ({ opened, close }) => {
+const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [dragging, setDragging] = React.useState(false);
   const [dragCounter, setDragCounter] = React.useState(0);
+  const [files, setFiles] = React.useState<FileList>();
+  const uploadProgress = React.useRef(0);
 
   document.ondragenter = (e) => {
     e.preventDefault();
@@ -33,11 +35,18 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close }) => {
   };
 
   const onDrop: React.DragEventHandler<HTMLDivElement> = (e) => {
-    console.log("Handeling drop");
     e.preventDefault();
     e.stopPropagation();
     setDragging(false);
+    open();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFiles(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      setDragCounter(0);
+    }
   };
+
+  const;
 
   return (
     <>
