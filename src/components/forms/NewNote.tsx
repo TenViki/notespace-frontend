@@ -169,15 +169,22 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
         </div>
 
         <button
-          onClick={() =>
+          onClick={() => {
             createNote.mutate({
               content: content,
               files: fileIds,
               label: label,
               tag: tag,
               forDay: date,
-            })
-          }
+            });
+
+            setLabel("");
+            setTag("");
+            setContent("");
+            setDate(new Date());
+            setFiles([]);
+            setFileIds([]);
+          }}
         >
           <div className="text">Create</div>
         </button>
