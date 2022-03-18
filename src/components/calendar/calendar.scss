@@ -1,6 +1,8 @@
 .calendar-dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .date-selection {
@@ -16,4 +18,15 @@
     display: flex;
     gap: 0.5rem;
   }
+}
+
+.calendar-date {
+  padding: 0.7rem 1rem;
+  background-color: #fff;
+
+  &.inactive {
+    background-color: transparent;
+  }
+
+  border-radius: 0.2rem;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./calendar.scss";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import DateItem from "./Date";
 
 export const months = [
   "January",
@@ -19,7 +20,12 @@ export const months = [
 
 const Calendar = () => {
   const [date, setDate] = React.useState(new Date());
-  const [days, setDays] = React.useState<string[]>([]);
+  const [days, setDays] = React.useState<
+    {
+      date: number;
+      inMonth: boolean;
+    }[]
+  >([]);
 
   const loadCalendarDates = () => {
     const month = date.getMonth();
@@ -32,13 +38,21 @@ const Calendar = () => {
     const array = [];
 
     // create day prefixes
-    for (var i = 0; i <= dayOfWeek; i++) {
-      array.push("");
+    for (let i = dayOfWeek; i >= 0; i--) {
+      array.push({
+        date: tmpDate.getDate() - i,
+        inMonth: false,
+      });
     }
 
     // render the rest of the days
-    for (var i = 0; i < num; i++) {
-      array.push(`${i + 1}`);
+    for (let i = 0; i < num; i++) {
+      array.push({ date: i + 1, inMonth: true });
+    }
+
+    let i = 0;
+    while (array.length % 7 != 0) {
+      array.push({ date: ++i, inMonth: false });
     }
 
     setDays(array);
@@ -81,7 +95,7 @@ const Calendar = () => {
         <div className="day label">Sun</div>
 
         {days.map((day) => (
-          <div>{day}</div>
+          <DateItem date={day.date} inMonth={day.inMonth} />
         ))}
       </div>
     </div>
