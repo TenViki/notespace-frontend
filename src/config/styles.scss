@@ -1,6 +1,10 @@
 $color: #3498db;
 $danger: #e74c3c;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #dbdbdb;
   font-family: "Nunito";
@@ -49,10 +53,31 @@ button {
   .text {
     margin: 0.3rem;
     font-family: "Nunito";
+
+    &:first-child {
+      margin: 0.2rem 0.7rem;
+    }
   }
 }
 
 .add-new {
   margin-top: 0.5rem;
   width: 100%;
+}
+
+input {
+  background-color: #f4f4f4;
+  border: 1px solid #b3b3b3;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-radius: 0.3rem;
+  padding: 0.6rem 0.3rem;
+  outline: 0;
+
+  transition: 0.2s;
+  &:focus {
+    border-color: $color;
+    background-color: #f0f0f0;
+  }
 }
