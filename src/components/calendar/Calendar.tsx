@@ -24,9 +24,11 @@ export const months = [
 interface CalendarProps {
   notes: Note[];
   setNotes: (notes: Note[]) => void;
+  onDateSelect: (date: Date) => void;
+  selectedDate: Date;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ setNotes, notes }) => {
+const Calendar: React.FC<CalendarProps> = ({ setNotes, notes, onDateSelect, selectedDate }) => {
   const [date, setDate] = React.useState(new Date());
   const [days, setDays] = React.useState<
     {
@@ -38,15 +40,11 @@ const Calendar: React.FC<CalendarProps> = ({ setNotes, notes }) => {
   const month = date.getMonth();
   const year = date.getFullYear();
 
-  useQuery(
-    ["notes", { month: month + 1, year }],
-    async () => api.get<Note[]>(`/notes/${year}/${month + 1}`),
-    {
-      onSuccess: (data) => {
-        setNotes(data.data);
-      },
-    }
-  );
+  useQuery(["notes", { month: month + 1, year }], async () => api.get<Note[]>(`/notes/${year}/${month + 1}`), {
+    onSuccess: (data) => {
+      setNotes(data.data);
+    },
+  });
 
   const loadCalendarDates = () => {
     const tmpDate = new Date(year, month, 0);
@@ -86,11 +84,7 @@ const Calendar: React.FC<CalendarProps> = ({ setNotes, notes }) => {
         </div>
 
         <div className="date-buttons">
-          <button
-            onClick={() =>
-              setDate(new Date(date.getFullYear(), date.getMonth() - 1))
-            }
-          >
+          <button onClick={() => setDate(new Date(date.getFullYear(), date.getMonth() - 1))}>
             <FiChevronUp />
           </button>
 
@@ -120,9 +114,9 @@ const Calendar: React.FC<CalendarProps> = ({ setNotes, notes }) => {
             year={+year}
             inMonth={day.inMonth}
             key={i}
-            notes={notes.filter(
-              (note) => note.forDay.split("-")[2] == day.date + ""
-            )}
+            notes={notes.filter((note) => note.forDay.split("-")[2] === day.date + "")}
+            onClick={() => onDateSelect(new Date(year, month, day.date))}
+            selected={selectedDate.toISOString() === new Date(year, month, day.date).toISOString()}
           />
         ))}
       </div>

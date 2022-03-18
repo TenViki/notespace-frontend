@@ -15,9 +15,17 @@ interface NewNoteProps {
   opened: boolean;
   close: () => void;
   open: () => void;
+  formDate: Date;
+  setFormDate: (date: Date) => void;
 }
 
-const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
+const NewNote: React.FC<NewNoteProps> = ({
+  opened,
+  close,
+  open,
+  formDate,
+  setFormDate,
+}) => {
   const [dragging, setDragging] = React.useState(false);
   const [dragCounter, setDragCounter] = React.useState(0);
   const [files, setFiles] = React.useState<File[]>([]);
@@ -30,7 +38,6 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [label, setLabel] = React.useState("");
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
-  const [date, setDate] = React.useState(new Date());
 
   const createNote = useMutation(
     async (data: {
@@ -148,7 +155,7 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Note content"
         ></textarea>
-        <DayPickerInput onDayChange={setDate} value={date} />
+        <DayPickerInput onDayChange={setFormDate} value={formDate} />
 
         <div className="add-note-files">
           <div className="file-title">Attachements:</div>
@@ -175,13 +182,13 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
               files: fileIds,
               label: label,
               tag: tag,
-              forDay: date,
+              forDay: formDate,
             });
 
             setLabel("");
             setTag("");
             setContent("");
-            setDate(new Date());
+            setFormDate(new Date());
             setFiles([]);
             setFileIds([]);
           }}
