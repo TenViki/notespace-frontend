@@ -3,15 +3,17 @@ import { FiPlus } from "react-icons/fi";
 import Calendar from "./components/calendar/Calendar";
 import NewNote from "./components/forms/NewNote";
 import Header from "./components/header/Header";
+import { Note } from "./types";
 
 function App() {
   const [newNoteOpened, setNewNoteOpened] = useState(false);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   return (
     <div className="app">
       <div className="main">
         <Header />
-        <Calendar />
+        <Calendar notes={notes} setNotes={setNotes} />
 
         <button
           className="add-new"

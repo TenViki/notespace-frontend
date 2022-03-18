@@ -1,3 +1,5 @@
+@import "../../config/styles.scss";
+
 .calendar-dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -21,12 +23,32 @@
 }
 
 .calendar-date {
-  padding: 0.7rem 1rem;
+  padding: 0.3rem 1rem;
   background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &:not(.inactive) {
+    cursor: pointer;
+  }
+  transition: 0.2s;
+
+  .calendar-date-num {
+    margin: 0.3rem 0;
+  }
 
   &.inactive {
     background-color: transparent;
     color: #777;
+  }
+
+  &.active {
+    background-color: rgba($color, 0.2);
+  }
+
+  &:hover:not(.inactive) {
+    background-color: rgba($color, 0.1);
   }
 
   border-radius: 0.3rem;
@@ -35,4 +57,16 @@
 .calendar-dates .day {
   font-size: 1.2rem;
   color: #777;
+}
+
+.calendar-date-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+
+  .calendar-date-tag {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+  }
 }
