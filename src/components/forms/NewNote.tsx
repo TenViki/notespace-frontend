@@ -4,6 +4,9 @@ import SlideMenu from "../shared/SlideMenu";
 import { FiUpload } from "react-icons/fi";
 import { api } from "../../config/config";
 import Document from "./Document";
+import { FileType } from "../../types";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 interface NewNoteProps {
   opened: boolean;
@@ -19,6 +22,7 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [bytesLoaded, setBytesLoaded] = React.useState(0);
   const [uploadQueue, setUploadQueue] = React.useState<File[]>([]);
   const [uploading, setUploading] = React.useState(false);
+  const [fileIds, setFileIds] = React.useState<string[]>([]);
 
   document.ondragenter = (e) => {
     e.preventDefault();
@@ -65,16 +69,24 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
 
     console.log("Using last total bytes loaded: ", totalBytesLoaded);
 
-    const serverfiles = await api.post("/files", formData, {
-      onUploadProgress: (e) => {
-        setUploadProgress(e);
-        console.log();
-        totalBytesLoaded += e.loaded - lastBytesLoaded;
-        console.log("totalBytesLoaded: ", totalBytesLoaded);
-        setBytesLoaded(totalBytesLoaded);
-        lastBytesLoaded = e.loaded;
-      },
-    });
+    try {
+      const serverfiles = await api.post<FileType[]>("/files", formData, {
+        onUploadProgress: (e) => {
+          setUploadProgress(e);
+          console.log();
+          totalBytesLoaded += e.loaded - lastBytesLoaded;
+          console.log("totalBytesLoaded: ", totalBytesLoaded);
+          setBytesLoaded(totalBytesLoaded);
+          lastBytesLoaded = e.loaded;
+        },
+      });
+
+      setFileIds([...fileIds, ...serverfiles.data.map((f) => f.id)]);
+    } catch (error) {
+      if (axios.isAxiosError(error))
+        toast.error(error?.response?.data?.message || "Something went wrong");
+      else toast.error("Something went wrong");
+    }
     setUploading(false);
   };
 
