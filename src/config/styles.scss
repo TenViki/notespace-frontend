@@ -33,7 +33,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.2rem;
+  border-radius: 0.3rem;
   padding: 0.3rem;
   font-size: 1rem;
 
@@ -68,12 +68,12 @@ button {
 
 input {
   background-color: #f4f4f4;
-  border: 1px solid #b3b3b3;
+  border: 1px solid #c9c9c9;
   display: block;
   width: 100%;
   margin-bottom: 0.5rem;
   border-radius: 0.3rem;
-  padding: 0.6rem 0.3rem;
+  padding: 0.6rem 0.5rem;
   outline: 0;
 
   transition: 0.2s;

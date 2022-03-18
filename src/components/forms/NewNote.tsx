@@ -16,7 +16,6 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [dragCounter, setDragCounter] = React.useState(0);
   const [files, setFiles] = React.useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = React.useState<ProgressEvent>();
-  const [allBytes, setAllBytes] = React.useState(0);
   const [bytesLoaded, setBytesLoaded] = React.useState(0);
   const [uploadQueue, setUploadQueue] = React.useState<File[]>([]);
   const [uploading, setUploading] = React.useState(false);
@@ -59,7 +58,6 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
-      setAllBytes(allBytes + files[i].size);
     }
 
     let lastBytesLoaded: number = 0;
@@ -108,7 +106,6 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
                   key={i}
                   file={file}
                   bytesBefore={oldValue}
-                  total={allBytes}
                   loaded={bytesLoaded}
                 />
               );
