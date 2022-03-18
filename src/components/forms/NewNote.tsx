@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./newnote.scss";
 import SlideMenu from "../shared/SlideMenu";
-import DropArea from "./DropArea";
 import { FiUpload } from "react-icons/fi";
+import { api } from "../../config/config";
+import Document from "./Document";
 
 interface NewNoteProps {
   opened: boolean;
@@ -13,8 +14,12 @@ interface NewNoteProps {
 const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
   const [dragging, setDragging] = React.useState(false);
   const [dragCounter, setDragCounter] = React.useState(0);
-  const [files, setFiles] = React.useState<FileList>();
-  const uploadProgress = React.useRef(0);
+  const [files, setFiles] = React.useState<File[]>([]);
+  const [uploadProgress, setUploadProgress] = React.useState<ProgressEvent>();
+  const [allBytes, setAllBytes] = React.useState(0);
+  const [bytesLoaded, setBytesLoaded] = React.useState(0);
+  const [uploadQueue, setUploadQueue] = React.useState<File[]>([]);
+  const [uploading, setUploading] = React.useState(false);
 
   document.ondragenter = (e) => {
     e.preventDefault();
@@ -40,11 +45,49 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
     setDragging(false);
     open();
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFiles(e.dataTransfer.files);
+      setFiles([...files, ...e.dataTransfer.files]);
+      uploadFiles(e.dataTransfer.files);
       e.dataTransfer.clearData();
       setDragCounter(0);
     }
   };
+
+  const uploadFiles = async (files: FileList | File[]) => {
+    if (uploading) return setUploadQueue([...uploadQueue, ...files]);
+    if (!files) return;
+    setUploading(true);
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+      setAllBytes(allBytes + files[i].size);
+    }
+
+    let lastBytesLoaded: number = 0;
+    let totalBytesLoaded = bytesLoaded;
+
+    console.log("Using last total bytes loaded: ", totalBytesLoaded);
+
+    const serverfiles = await api.post("/files", formData, {
+      onUploadProgress: (e) => {
+        setUploadProgress(e);
+        console.log();
+        totalBytesLoaded += e.loaded - lastBytesLoaded;
+        console.log("totalBytesLoaded: ", totalBytesLoaded);
+        setBytesLoaded(totalBytesLoaded);
+        lastBytesLoaded = e.loaded;
+      },
+    });
+    setUploading(false);
+  };
+
+  useEffect(() => {
+    if (uploadQueue.length > 0) {
+      uploadFiles(uploadQueue);
+      setUploadQueue([]);
+    }
+  }, [uploading]);
+
+  let bytesBefore = 0;
 
   return (
     <>
@@ -55,6 +98,21 @@ const NewNote: React.FC<NewNoteProps> = ({ opened, close, open }) => {
 
         <div className="add-note-files">
           <div className="file-title">Attachements:</div>
+
+          {uploadProgress &&
+            files.map((file, i) => {
+              const oldValue = bytesBefore;
+              bytesBefore += file.size;
+              return (
+                <Document
+                  key={i}
+                  file={file}
+                  bytesBefore={oldValue}
+                  total={allBytes}
+                  loaded={bytesLoaded}
+                />
+              );
+            })}
         </div>
 
         <button>
