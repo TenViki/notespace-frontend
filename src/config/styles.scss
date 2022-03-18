@@ -1,3 +1,5 @@
+$color: #3498db;
+
 body {
   background-color: #dbdbdb;
   font-family: "Nunito";
@@ -6,4 +8,20 @@ body {
 .container {
   max-width: 30rem;
   margin: 0 auto;
+}
+button {
+  border: none;
+  background-color: $color;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.3rem;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }

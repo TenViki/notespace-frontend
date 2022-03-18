@@ -2,3 +2,18 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
+
+.date-selection {
+  display: flex;
+  margin-bottom: 0.5rem;
+  align-items: center;
+
+  .date-month {
+    flex-grow: 1;
+  }
+
+  .date-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

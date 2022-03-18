@@ -1,5 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./calendar.scss";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const Calendar = () => {
   const [date, setDate] = React.useState(new Date());
@@ -28,8 +44,33 @@ const Calendar = () => {
     setDays(array);
   };
 
+  useEffect(loadCalendarDates, [date]);
+
   return (
-    <div className="calendar">
+    <div className="calendar container">
+      <div className="date-selection">
+        <div className="date-month">
+          {date.getFullYear()} - {months[date.getMonth()]}
+        </div>
+
+        <div className="date-buttons">
+          <button
+            onClick={() =>
+              setDate(new Date(date.getFullYear(), date.getMonth() - 1))
+            }
+          >
+            <FiChevronUp />
+          </button>
+
+          <button
+            onClick={() => {
+              setDate(new Date(date.getFullYear(), date.getMonth() + 1));
+            }}
+          >
+            <FiChevronDown />
+          </button>
+        </div>
+      </div>
       <div className="calendar-dates">
         <div className="day label">Mon</div>
         <div className="day label">Tue</div>
@@ -43,7 +84,6 @@ const Calendar = () => {
           <div>{day}</div>
         ))}
       </div>
-      <button onClick={loadCalendarDates}>Generate calendar</button>
     </div>
   );
 };
