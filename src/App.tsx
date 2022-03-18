@@ -32,24 +32,33 @@ function App() {
           }
         />
 
-        <button className="add-new" onClick={() => setNewNoteOpened(!newNoteOpened)}>
+        <button
+          className="add-new"
+          onClick={() => {
+            setNewNoteOpened(!newNoteOpened);
+            setTaglistOpened(newNoteOpened);
+          }}
+        >
           <FiPlus />
           <div className="text">Add note</div>
         </button>
       </div>
+
+      <TagList
+        opened={taglistOpened}
+        close={() => {
+          setTaglistOpened(false);
+        }}
+        date={selectedDate}
+        notes={notes.filter((note) => note.forDay.split("-")[2] === selectedDate.getDate() + "")}
+      />
+
       <NewNote
         opened={newNoteOpened}
         close={() => setNewNoteOpened(false)}
         open={() => setNewNoteOpened(true)}
         formDate={formDate}
         setFormDate={setFormDate}
-      />
-
-      <TagList
-        opened={taglistOpened}
-        close={() => setTaglistOpened(false)}
-        date={selectedDate}
-        notes={notes.filter((note) => note.forDay.split("-")[2] === selectedDate.getDate() + "")}
       />
     </div>
   );
