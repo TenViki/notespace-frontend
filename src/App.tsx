@@ -31,8 +31,6 @@ function App() {
               : (date) => {
                   setSelectedDate(date);
                   setTaglistOpened(true);
-                  setNoteDataOpened(false);
-                  setSelectedNote(null);
                 }
           }
         />

@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import { api } from "../../config/config";
 import { Note } from "../../types";
 import SlideMenu from "../shared/SlideMenu";
+import FileComponent from "./File";
 
 interface NoteDataProps {
   opened: boolean;
@@ -25,13 +26,7 @@ const NoteData: React.FC<NoteDataProps> = ({ opened, close, stringid }) => {
           <div className="note-content">{data.data.content}</div>
 
           {data.data.files.map((file) => (
-            <div className="note-file" key={file.id}>
-              <a href={`${import.meta.env.VITE_API_URL}/files/${file.id}`} target="_blank" rel="noopener noreferrer">
-                {file.originalname}
-              </a>
-
-              <div className="note-file-type">{file.mimetype}</div>
-            </div>
+            <FileComponent file={file} key={file.id} />
           ))}
         </div>
       )}
