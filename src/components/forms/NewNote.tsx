@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import "react-day-picker/lib/style.css";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 interface NewNoteProps {
   opened: boolean;
@@ -19,13 +19,7 @@ interface NewNoteProps {
   setFormDate: (date: Date) => void;
 }
 
-const NewNote: React.FC<NewNoteProps> = ({
-  opened,
-  close,
-  open,
-  formDate,
-  setFormDate,
-}) => {
+const NewNote: React.FC<NewNoteProps> = ({ opened, close, open, formDate, setFormDate }) => {
   const [dragging, setDragging] = React.useState(false);
   const [dragCounter, setDragCounter] = React.useState(0);
   const [files, setFiles] = React.useState<File[]>([]);
@@ -39,20 +33,17 @@ const NewNote: React.FC<NewNoteProps> = ({
   const [tag, setTag] = React.useState("");
   const [content, setContent] = React.useState("");
 
+  const queryClient = useQueryClient();
+
   const createNote = useMutation(
-    async (data: {
-      tag: string;
-      label: string;
-      content: string;
-      files: string[];
-      forDay: Date;
-    }) => {
+    async (data: { tag: string; label: string; content: string; files: string[]; forDay: Date }) => {
       return api.post("/notes", { ...data, forDay: data.forDay.toISOString() });
     },
     {
       onSuccess: () => {
         toast.success("Note created");
         close();
+        queryClient.invalidateQueries("notes");
       },
       onError: () => {
         toast.error("Error creating note");
@@ -119,8 +110,7 @@ const NewNote: React.FC<NewNoteProps> = ({
 
       setFileIds([...fileIds, ...serverfiles.data.map((f) => f.id)]);
     } catch (error) {
-      if (axios.isAxiosError(error))
-        toast.error(error?.response?.data?.message || "Something went wrong");
+      if (axios.isAxiosError(error)) toast.error(error?.response?.data?.message || "Something went wrong");
       else toast.error("Something went wrong");
     }
     setUploading(false);
@@ -138,23 +128,9 @@ const NewNote: React.FC<NewNoteProps> = ({
   return (
     <>
       <SlideMenu opened={opened} close={close} title="New note" width="20rem">
-        <input
-          type="text"
-          placeholder="Tag"
-          value={tag}
-          onChange={(e) => setTag(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Label"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-        />
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Note content"
-        ></textarea>
+        <input type="text" placeholder="Tag" value={tag} onChange={(e) => setTag(e.target.value)} />
+        <input type="text" placeholder="Label" value={label} onChange={(e) => setLabel(e.target.value)} />
+        <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Note content"></textarea>
         <DayPickerInput onDayChange={setFormDate} value={formDate} />
 
         <div className="add-note-files">
@@ -164,43 +140,38 @@ const NewNote: React.FC<NewNoteProps> = ({
             files.map((file, i) => {
               const oldValue = bytesBefore;
               bytesBefore += file.size;
-              return (
-                <Document
-                  key={i}
-                  file={file}
-                  bytesBefore={oldValue}
-                  loaded={bytesLoaded}
-                />
-              );
+              return <Document key={i} file={file} bytesBefore={oldValue} loaded={bytesLoaded} />;
             })}
         </div>
 
         <button
           onClick={() => {
-            createNote.mutate({
-              content: content,
-              files: fileIds,
-              label: label,
-              tag: tag,
-              forDay: formDate,
-            });
-
-            setLabel("");
-            setTag("");
-            setContent("");
-            setFormDate(new Date());
-            setFiles([]);
-            setFileIds([]);
+            createNote.mutate(
+              {
+                content: content,
+                files: fileIds,
+                label: label,
+                tag: tag,
+                forDay: formDate,
+              },
+              {
+                onSuccess: () => {
+                  setLabel("");
+                  setTag("");
+                  setContent("");
+                  setFormDate(new Date());
+                  setFiles([]);
+                  setFileIds([]);
+                },
+              }
+            );
           }}
         >
           <div className="text">Create</div>
         </button>
       </SlideMenu>
 
-      <div
-        className={`file-overlay ${dragging ? "active" : ""}`}
-        onDrop={onDrop}
-      >
+      <div className={`file-overlay ${dragging ? "active" : ""}`} onDrop={onDrop}>
         <div className="file-overlay-content">
           <FiUpload />
           <div className="drop-label">Drop files here</div>
